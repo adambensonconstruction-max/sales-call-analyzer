@@ -2,7 +2,7 @@ Flask==3.0.0
 flask-cors==4.0.0
 flask-limiter==3.5.0
 flask-talisman==1.1.0
-supabase==2.3.0
+supabase==2.15.0
 openai==1.12.0
 assemblyai==0.26.0
 deepgram-sdk==3.1.0
