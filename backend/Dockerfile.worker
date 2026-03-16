@@ -1,0 +1,42 @@
+# Celery Worker Dockerfile for Sales Call Analyzer
+# Used for background task processing (transcription, analysis)
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    python3-dev \
+    libpq-dev \
+    ffmpeg \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir celery[redis] flower
+
+# Copy application code
+COPY . .
+
+# Create non-root user
+RUN groupadd -r worker && useradd -r -g worker worker && \
+    mkdir -p /app/temp && chown -R worker:worker /app
+
+USER worker
+
+# Environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    CELERY_WORKER_CONCURRENCY=4
+
+# Default command (can be overridden)
+CMD ["celery", "-A", "tasks", "worker", "-l", "info", "-c", "4"]

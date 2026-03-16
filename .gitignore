@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.env
+.env.local
+__pycache__/
+*.pyc
+.Python
+venv/
+.venv/
+*.log
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# Local Netlify folder
+.netlify
