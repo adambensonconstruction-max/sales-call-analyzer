@@ -42,8 +42,9 @@ def create_app(testing: bool = False) -> Flask:
     # Register all blueprints
     register_blueprints(app)
     
-    # Health check endpoint (no auth required)
+    # Health check endpoints (no auth required)
     @app.route('/health')
+    @app.route('/api/health')
     def health_check():
         """Health check endpoint."""
         return jsonify({
