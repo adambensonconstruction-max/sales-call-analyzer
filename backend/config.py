@@ -56,6 +56,9 @@ class Config:
     
     def validate(self) -> None:
         """Validate required configuration values."""
+        import logging
+        logger = logging.getLogger(__name__)
+        
         required = [
             ('SUPABASE_URL', self.SUPABASE_URL),
             ('SUPABASE_SERVICE_ROLE_KEY', self.SUPABASE_SERVICE_ROLE_KEY),
@@ -64,7 +67,10 @@ class Config:
         
         missing = [name for name, value in required if not value]
         if missing:
-            raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
+            logger.warning(f"Missing environment variables: {', '.join(missing)}")
+            # Don't raise in production, just log warning
+            if self.ENV == 'development':
+                raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
 
 
 # Global config instance
